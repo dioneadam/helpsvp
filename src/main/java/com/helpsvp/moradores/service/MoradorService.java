@@ -1,6 +1,7 @@
 package com.helpsvp.moradores.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.helpsvp.moradores.api.rest.response.MoradorResponse;
 import com.helpsvp.moradores.dto.MoradorDTO;
 import com.helpsvp.moradores.entity.MoradorEntity;
 import com.helpsvp.moradores.mapper.MoradorMapper;
@@ -23,22 +24,22 @@ public class MoradorService {
         this.objectMapper = objectMapper;
     }
 
-    public MoradorDTO findById(UUID id) {
+    public MoradorResponse findById(UUID id) {
         Optional<MoradorEntity> morador = this.repository.findById(id);
-        return morador.map(MoradorMapper::toDTO).orElse(null);
+        return morador.map(MoradorMapper::toResponse).orElse(null);
     }
 
-    public List<MoradorDTO> findAll() {
+    public List<MoradorResponse> findAll() {
         List<MoradorEntity> moradores = this.repository.findAll();
         return moradores
                 .stream()
-                .map(MoradorMapper::toDTO)
+                .map(MoradorMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
-    public MoradorDTO save(MoradorEntity moradorEntity) {
-        MoradorEntity morador = this.repository.save(moradorEntity);
-        return MoradorMapper.toDTO(morador);
+    public void save(MoradorDTO moradorDTO) {
+        MoradorEntity moradorEntity = MoradorMapper.toEntity(moradorDTO);
+        this.repository.save(moradorEntity);
     }
 
     public Boolean delete(UUID id) {

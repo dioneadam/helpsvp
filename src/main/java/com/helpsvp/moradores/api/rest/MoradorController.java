@@ -1,8 +1,9 @@
 package com.helpsvp.moradores.api.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.helpsvp.moradores.api.rest.request.MoradorRequest;
+import com.helpsvp.moradores.api.rest.response.MoradorResponse;
 import com.helpsvp.moradores.dto.MoradorDTO;
-import com.helpsvp.moradores.entity.MoradorEntity;
 import com.helpsvp.moradores.mapper.MoradorMapper;
 import com.helpsvp.moradores.service.MoradorService;
 import org.springframework.http.HttpStatus;
@@ -32,33 +33,33 @@ public class MoradorController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<MoradorDTO> findById(@PathVariable UUID id) {
-        MoradorDTO obj = this.service.findById(id);
+    public ResponseEntity<MoradorResponse> findById(@PathVariable UUID id) {
+        MoradorResponse obj = this.service.findById(id);
         return ResponseEntity.ok(obj);
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<List<MoradorDTO>> findAll() {
-        List<MoradorDTO> list = this.service.findAll();
+    public ResponseEntity<List<MoradorResponse>> findAll() {
+        List<MoradorResponse> list = this.service.findAll();
         return ResponseEntity.ok(list);
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<HttpStatus> save(@RequestBody MoradorDTO request) {
-        MoradorEntity moradorEntity = MoradorMapper.toEntity(request);
-        this.service.save(moradorEntity);
+    public ResponseEntity<HttpStatus> save(@RequestBody MoradorRequest request) {
+        MoradorDTO moradorDTO = MoradorMapper.toDTO(request);
+        this.service.save(moradorDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<HttpStatus> update(@RequestBody MoradorDTO request) {
-        MoradorEntity moradorEntity = MoradorMapper.toEntity(request);
-        this.service.save(moradorEntity);
+    public ResponseEntity<HttpStatus> update(@RequestBody MoradorRequest request) {
+        MoradorDTO moradorDTO = MoradorMapper.toDTO(request);
+        this.service.save(moradorDTO);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HttpStatus> update(@PathVariable UUID id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable UUID id) {
         if (this.service.delete(id)) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
